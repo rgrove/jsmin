@@ -1,5 +1,9 @@
-CSSMin History
+JSMin History
 ================================================================================
+
+Version 1.0.1 (2008-11-10)
+  * Ruby 1.9 compatibility.
+  * Minor performance improvements.
 
 Version 1.0.0 (2008-03-22)
   * First release.

@@ -34,7 +34,7 @@ thoth_gemspec = Gem::Specification.new do |s|
   s.rubyforge_project = 'riposte'
 
   s.name     = 'jsmin'
-  s.version  = '1.0.0'
+  s.version  = '1.0.1'
   s.author   = 'Ryan Grove'
   s.email    = 'ryan@wonko.com'
   s.homepage = 'http://github.com/rgrove/jsmin/'
