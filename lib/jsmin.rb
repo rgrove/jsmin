@@ -33,10 +33,10 @@ require 'strscan'
 #
 # Ruby implementation of Douglas Crockford's JavaScript minifier, JSMin.
 #
-# Author::    Ryan Grove (mailto:ryan@wonko.com)
-# Version::   1.0.1 (2008-11-10)
-# Copyright:: Copyright (c) 2008 Ryan Grove. All rights reserved.
-# Website::   http://github.com/rgrove/jsmin/
+# *Author*::    Ryan Grove (mailto:ryan@wonko.com)
+# *Version*::   1.0.1 (2008-11-10)
+# *Copyright*:: Copyright (c) 2008 Ryan Grove. All rights reserved.
+# *Website*::   http://github.com/rgrove/jsmin
 #
 # == Example
 #
@@ -67,7 +67,7 @@ module JSMin
 
   class << self
 
-    # Reads JavaScript from +input+ (which can be a String or an IO object) and
+    # Reads JavaScript from _input_ (which can be a String or an IO object) and
     # returns a String containing minified JS.
     def minify(input)
       @js = StringScanner.new(input.is_a?(IO) ? input.read : input.to_s)
