@@ -56,3 +56,10 @@ Rake::RDocTask.new do |rd|
 
   rd.options << '--line-numbers' << '--inline-source'
 end
+
+desc 'Generate the gemspec to serve this Gem from Github'
+task :github do
+  file = File.dirname(__FILE__) + "/#{gemspec.name}.gemspec"
+  File.open(file, 'w') {|f| f << gemspec.to_ruby }
+  puts "Created gemspec: #{file}"
+end
