@@ -55,22 +55,30 @@ module JSMin
   CHR_QUOTE      = '"'.freeze
   CHR_SPACE      = ' '.freeze
 
-  if RUBY_VERSION >= '1.9'
-    ORD_LF    = "\n".freeze
-    ORD_SPACE = ' '.freeze
-    ORD_TILDE = '~'.freeze
-  else
-    ORD_LF    = "\n"[0].freeze
-    ORD_SPACE = ' '[0].freeze
-    ORD_TILDE = '~'[0].freeze
+  ORD_LF    = "\n"[0].freeze
+  ORD_SPACE = ' '[0].freeze
+  ORD_TILDE = '~'[0].freeze
+
+  class ParseError < RuntimeError
+    attr_accessor :source, :line
+    def initialize(err, source, line)
+      @source = source,
+      @line = line
+      super "JSMin Parse Error: #{err} at line #{line} of #{source}"
+    end
   end
 
   class << self
+    def raise(err)
+      super ParseError.new(err, @source, @line)
+    end
 
     # Reads JavaScript from _input_ (which can be a String or an IO object) and
     # returns a String containing minified JS.
     def minify(input)
       @js = StringScanner.new(input.is_a?(IO) ? input.read : input.to_s)
+      @source = input.is_a?(IO) ? input.inspect : input.to_s[0..100]
+      @line = 1
 
       @a         = "\n"
       @b         = nil
@@ -147,7 +155,7 @@ module JSMin
           break if @a == @b
 
           if @a[0] <= ORD_LF
-            raise "JSMin parse error: unterminated string literal: #{@a}"
+            raise "unterminated string literal: #{@a.inspect}"
           end
 
           if @a == CHR_BACKSLASH
@@ -155,7 +163,7 @@ module JSMin
             @a = get
 
             if @a[0] <= ORD_LF
-              raise "JSMin parse error: unterminated string literal: #{@a}"
+              raise "unterminated string literal: #{@a.inspect}"
             end
           end
         end
@@ -181,8 +189,7 @@ module JSMin
             @output << @a
             @a = get
           elsif @a[0] <= ORD_LF
-            raise "JSMin parse error: unterminated regular expression " +
-                "literal: #{@a}"
+            raise "unterminated regular expression : #{@a.inspect}"
           end
 
           @output << @a
@@ -201,12 +208,18 @@ module JSMin
     # Returns the next character from the input. If the character is a control
     # character, it will be translated to a space or linefeed.
     def get
-      c = @lookahead.nil? ? @js.getch : @lookahead
-      @lookahead = nil
-
-      return c if c.nil? || c == CHR_LF || c[0] >= ORD_SPACE
-      return "\n" if c == CHR_CR
-      return ' '
+      if @lookahead
+        c = @lookahead
+        @lookahead = nil
+      else
+        c = @js.getch
+        if c == CHR_LF || c == CHR_CR
+          @line += 1
+          return CHR_LF
+        end
+        return ' ' unless c.nil? || c[0] >= ORD_SPACE
+      end
+      c
     end
 
     # Gets the next character, excluding comments.
@@ -232,7 +245,7 @@ module JSMin
             end
 
           when nil
-            raise 'JSMin parse error: unterminated comment'
+            raise 'unterminated comment'
           end
         end
 
