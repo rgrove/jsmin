@@ -55,9 +55,9 @@ module JSMin
   CHR_QUOTE      = '"'.freeze
   CHR_SPACE      = ' '.freeze
 
-  ORD_LF    = "\n"[0].freeze
-  ORD_SPACE = ' '[0].freeze
-  ORD_TILDE = '~'[0].freeze
+  ORD_LF    = ?\n
+  ORD_SPACE = ?\ 
+  ORD_TILDE = ?~
 
   class ParseError < RuntimeError
     attr_accessor :source, :line
