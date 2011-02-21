@@ -1,10 +1,10 @@
 #--
 # Copyright (c) 2008 Ryan Grove <ryan@wonko.com>
 # All rights reserved.
-# 
+#
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
-# 
+#
 #   * Redistributions of source code must retain the above copyright notice,
 #     this list of conditions and the following disclaimer.
 #   * Redistributions in binary form must reproduce the above copyright notice,
@@ -13,7 +13,7 @@
 #   * Neither the name of this project nor the names of its contributors may be
 #     used to endorse or promote products derived from this software without
 #     specific prior written permission.
-# 
+#
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 # AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 # IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
@@ -27,14 +27,12 @@
 #++
 
 require 'rubygems'
-require 'rake/gempackagetask'
-require 'rake/rdoctask'
 
-thoth_gemspec = Gem::Specification.new do |s|
-  s.rubyforge_project = 'riposte'
+require 'jeweler'
 
-  s.name     = 'jsmin'
-  s.version  = '1.0.1'
+Jeweler::Tasks.new do |s|
+  s.name     = 'timr_jsmin'
+  s.version  = '1.0.1a'
   s.author   = 'Ryan Grove'
   s.email    = 'ryan@wonko.com'
   s.homepage = 'http://github.com/rgrove/jsmin/'
@@ -49,14 +47,3 @@ thoth_gemspec = Gem::Specification.new do |s|
   s.required_ruby_version = '>= 1.8.6'
 end
 
-Rake::GemPackageTask.new(thoth_gemspec) do |p|
-  p.need_tar_gz = true
-end
-
-Rake::RDocTask.new do |rd|
-  rd.main     = 'JSMin'
-  rd.title    = 'JSMin'
-  rd.rdoc_dir = 'doc'
-
-  rd.rdoc_files.include('lib/**/*.rb')
-end
