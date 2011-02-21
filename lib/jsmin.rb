@@ -183,7 +183,25 @@ module JSMin
         loop do
           @a = get
 
-          if @a == CHR_FRONTSLASH
+           # Inside a regex [...] set, which MAY contain a '/' itself.
+           # Example:
+           #   mootools Form.Validator near line 460:
+           #     return Form.Validator.getValidator('IsEmpty').test(element) || (/^(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]\.?){0,63}[a-z0-9!#$%&'*+/=?^_`{|}~-]@(?:(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\])$/i).test(element.get('value'));
+          if @a == '['
+            loop do
+              @output << @a
+              @a = get
+              case @a
+                when ']' then break
+                when CHR_BACKSLASH then
+                  @output << @a
+                  @a = get
+                when @a[0] <= ORD_LF
+                  raise "JSMin parse error: unterminated regular expression " +
+                      "literal: #{@a}"
+              end
+            end
+          elsif @a == CHR_FRONTSLASH
             break
           elsif @a == CHR_BACKSLASH
             @output << @a
